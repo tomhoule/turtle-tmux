@@ -16,7 +16,8 @@ theThing :: Shell ()
 theThing = do
     path <- home >>= \h -> return $ h <> "src"
     dirs <- ls path
-    bin <- which "tmux" >>= return . fromJust
+    tmux <- which "tmux" >>= return . fpToTxt . fromJust
     let dir = fpToTxt dirs
-    inproc (format (fp) $ bin) ["new", "-d", "-c", dir, "-s", last $ cut (text "/") dir] empty
+    let sessionName = last $ cut (text "/") dir
+    inproc tmux ["new", "-d", "-c", dir, "-s", sessionName] empty
     exit ExitSuccess
